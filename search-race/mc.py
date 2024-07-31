@@ -20,22 +20,22 @@ class Move:
 
 
 class State:
-    def __init__(self, checkpoints, checkpoint_index, x, y, vx, vy, angle):
+    def __init__(self, checkpoints, checkpoint_index, x, y, vx, vy, heading):
         self.checkpoints = checkpoints
         self.checkpoint_index = checkpoint_index
         self.x = x
         self.y = y
         self.vx = vx
         self.vy = vy
-        self.angle = angle
+        self.heading = heading
 
 
     def __str__(self):
-        return f'State(checkpoints, {self.checkpoint_index}, {self.x}, {self.y}, {self.vx}, {self.vy}, {self.angle})'
+        return f'State(checkpoints, {self.checkpoint_index}, {self.x}, {self.y}, {self.vx}, {self.vy}, {self.heading})'
 
 
     def copy(self):
-        return State(self.checkpoints, self.checkpoint_index, self.x, self.y, self.vx, self.vy, self.angle)
+        return State(self.checkpoints, self.checkpoint_index, self.x, self.y, self.vx, self.vy, self.heading)
 
 
     def cur_checkpoint(self):
@@ -43,17 +43,17 @@ class State:
 
 
     def simulate(self, move: Move):
-        desired_angle = 180 * math.atan2(move.y - self.y, move.x - self.x) / math.pi
-        da = norm_angle(desired_angle - self.angle)
+        desired_heading = 180 * math.atan2(move.y - self.y, move.x - self.x) / math.pi
+        da = norm_angle(desired_heading - self.heading)
         da = max(-18, min(18, da))
-        self.angle = self.angle + da
-        self.vx += move.thrust * math.cos(self.angle * math.pi / 180)
-        self.vy += move.thrust * math.sin(self.angle * math.pi / 180)
+        self.heading = self.heading + da
+        self.vx += move.thrust * math.cos(self.heading * math.pi / 180)
+        self.vy += move.thrust * math.sin(self.heading * math.pi / 180)
         self.x = int(self.x + self.vx)
         self.y = int(self.y + self.vy)
         self.vx = int(0.85 * self.vx)
         self.vy = int(0.85 * self.vy)
-        self.angle = round(self.angle) % 360
+        self.heading = round(self.heading) % 360
 
         # simplified checkpoint-collision check
         xc, yc = self.cur_checkpoint()

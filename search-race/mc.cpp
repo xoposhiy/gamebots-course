@@ -46,20 +46,20 @@ struct Move {
 struct State {
     const vector<Point>& checkpoints; // immutable
     int checkpoint_index;
-    double x, y, vx, vy, angle;
+    double x, y, vx, vy, heading;
 
-    State(const vector<Point>& checkpoints, int checkpoint_index, int x, int y, int vx, int vy, int angle)
-        : checkpoints(checkpoints), checkpoint_index(checkpoint_index), x(x), y(y), vx(vx), vy(vy), angle(angle) {}
+    State(const vector<Point>& checkpoints, int checkpoint_index, int x, int y, int vx, int vy, int heading)
+        : checkpoints(checkpoints), checkpoint_index(checkpoint_index), x(x), y(y), vx(vx), vy(vy), heading(heading) {}
 
     State(const State& other)
-        : checkpoints(other.checkpoints), checkpoint_index(other.checkpoint_index), x(other.x), y(other.y), vx(other.vx), vy(other.vy), angle(other.angle) {}
+        : checkpoints(other.checkpoints), checkpoint_index(other.checkpoint_index), x(other.x), y(other.y), vx(other.vx), vy(other.vy), heading(other.heading) {}
 
     void print() const {
         cerr << "State(" 
             << "checkpoint_index=" << checkpoint_index 
             << ", x=" << x << ", y=" << y
             << ", vx=" << vx << ", vy=" << vy 
-            << ", angle=" << angle << ")" << endl;
+            << ", heading=" << heading << ")" << endl;
     }
 
     Point get_checkpoint(int index = 0) const {
@@ -67,17 +67,17 @@ struct State {
     }
 
     void simulate(const Move& move) {
-        double desired_angle = 180.0 * atan2(move.y - y, move.x - x) / M_PI;
-        int da = norm_angle(desired_angle - angle);
+        double desired_heading = 180.0 * atan2(move.y - y, move.x - x) / M_PI;
+        int da = norm_angle(desired_heading - heading);
         da = max(-18, min(18, da));
-        angle = angle + da;
-        vx += move.thrust * cos(angle * M_PI / 180.0);
-        vy += move.thrust * sin(angle * M_PI / 180.0);
+        heading = heading + da;
+        vx += move.thrust * cos(heading * M_PI / 180.0);
+        vy += move.thrust * sin(heading * M_PI / 180.0);
         x = static_cast<int>(x + vx);
         y = static_cast<int>(y + vy);
         vx = static_cast<int>(0.85 * vx);
         vy = static_cast<int>(0.85 * vy);
-        angle = static_cast<int>(round(angle)) % 360;
+        heading = static_cast<int>(round(heading)) % 360;
         Point cp = get_checkpoint();
         int dx = x - cp.x, dy = y - cp.y;
         if (dx * dx + dy * dy < 590 * 590) {
@@ -130,12 +130,12 @@ int main() {
 
     Move best_moves[DEPTH];
     while (true) {
-        int checkpoint_index, x, y, vx, vy, angle;
-        cin >> checkpoint_index >> x >> y >> vx >> vy >> angle; // input current state
+        int checkpoint_index, x, y, vx, vy, heading;
+        cin >> checkpoint_index >> x >> y >> vx >> vy >> heading; // input current state
 
         /// Actual time per move is 50ms, but to avoid random timeouts we cut it in half
         clock_t end_time = clock() + 0.025 * CLOCKS_PER_SEC;
-        State state(checkpoints, checkpoint_index, x, y, vx, vy, angle);
+        State state(checkpoints, checkpoint_index, x, y, vx, vy, heading);
         random_search(state, best_moves, end_time);
 
         best_moves[0].print(); // output our next move!

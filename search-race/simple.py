@@ -2,7 +2,7 @@
 
 import math
 
-def ai(checkpoints, cp_index, x, y, vx, vy, angle):
+def ai(checkpoints, cp_index, x, y, vx, vy, heading):
     """
     If the car is facing the next checkpoint, then go at full thrust.
     else, turn towards the checkpoint.
@@ -14,8 +14,8 @@ def ai(checkpoints, cp_index, x, y, vx, vy, angle):
     cx, cy = checkpoints[cp_index]
     dx = cx - x
     dy = cy - y
-    cp_angle = math.atan2(dy, dx) * 180 / math.pi
-    da = norm_angle(cp_angle - angle)
+    cp_heading = math.atan2(dy, dx) * 180 / math.pi
+    da = norm_angle(cp_heading - heading)
     if abs(da) < 15:
         return f"{cx} {cy} 200 GO-GO-GO!"
     return f"{cx} {cy} 0 where is my checkpoint?"
@@ -43,8 +43,8 @@ def read_checkpoints():
 def main():
     checkpoints = read_checkpoints()
     while True:
-        checkpoint_index, x, y, vx, vy, angle = [int(i) for i in input().split()]
-        move = ai(checkpoints, checkpoint_index, x, y, vx, vy, angle)
+        checkpoint_index, x, y, vx, vy, heading = [int(i) for i in input().split()]
+        move = ai(checkpoints, checkpoint_index, x, y, vx, vy, heading)
         print(move)
 
 if __name__ == '__main__':

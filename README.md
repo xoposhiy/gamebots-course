@@ -2,7 +2,7 @@
 
 ## Search Race Game
 
-* [Slides](https://docs.google.com/presentation/d/1kH--hujqO8L9sIH1I2TKdWbrJ4kL7ik2zEFxY035WJw/edit?usp=sharing)
+* [Slides](https://docs.google.com/presentation/d/1CcVnk4EB6muZN5QuN1jVp7B1j9UOATMru1Hskbbii-s/edit?usp=sharing)
 * [Search Race @ CodinGame](https://www.codingame.com/multiplayer/optimization/search-race)
 * Starter C++ Template [simple.cpp](search-race/simple.cpp)
 * Starter Python Template [simple.py](search-race/simple.py)

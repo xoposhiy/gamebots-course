@@ -16,13 +16,13 @@ int norm_angle(int a) {
 }
 
 // AI function to decide the next move
-void ai(const Point checkpoints[], int cp_index, int x, int y, int vx, int vy, int angle) {
+void ai(const Point checkpoints[], int cp_index, int x, int y, int vx, int vy, int heading) {
     int cx = checkpoints[cp_index].x;
     int cy = checkpoints[cp_index].y;
     int dx = cx - x;
     int dy = cy - y;
-    float cp_angle = atan2(dy, dx) * 180 / M_PI;
-    float da = norm_angle(cp_angle - angle);
+    float cp_heading = atan2(dy, dx) * 180 / M_PI;
+    float da = norm_angle(cp_heading - heading);
 
     // TODO: Finishe the code!
     // If the car is facing the next checkpoint, then go at full thrust.
@@ -47,9 +47,9 @@ int main() {
     read_checkpoints(checkpoints, n);
     
     while (true) {
-        int checkpoint_index, x, y, vx, vy, angle;
-        cin >> checkpoint_index >> x >> y >> vx >> vy >> angle;
-        ai(checkpoints, checkpoint_index, x, y, vx, vy, angle);
+        int checkpoint_index, x, y, vx, vy, heading;
+        cin >> checkpoint_index >> x >> y >> vx >> vy >> heading;
+        ai(checkpoints, checkpoint_index, x, y, vx, vy, heading);
     }
 
     return 0;
